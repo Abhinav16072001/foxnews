@@ -1,38 +1,49 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import NewsItem from "./NewsItem";
 
 export default class News extends Component {
-  static propTypes = {
-    prop: PropTypes.func,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      articles: [],
+      loading: false,
+    };
+  }
+
+  async componentDidMount() {
+    let url =
+      "https://newsapi.org/v2/top-headlines?country=in&apiKey=0529b7bd50dd4e6596cbf39ab52de290";
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({ articles: parsedData.articles });
+  }
 
   render() {
     return (
       <div className="container my-3">
         <h2>Top Headings</h2>
         <div className="row">
-          <div className="col-md-4">
-            <NewsItem
-              title="My news1"
-              description="News Info"
-              img="https://image.cnbcfm.com/api/v1/image/107335568-1700223936443-gettyimages-1206167854-AFP_1PQ43W.jpeg?v=1700224480&w=1920&h=1080"
-            />
-          </div>
-          <div className="col-md-4">
-            <NewsItem
-              title="My news1"
-              description="News Info"
-              img="https://image.cnbcfm.com/api/v1/image/107335568-1700223936443-gettyimages-1206167854-AFP_1PQ43W.jpeg?v=1700224480&w=1920&h=1080"
-            />
-          </div>
-          <div className="col-md-4">
-            <NewsItem
-              title="My news1"
-              description="News Info"
-              img="https://image.cnbcfm.com/api/v1/image/107335568-1700223936443-gettyimages-1206167854-AFP_1PQ43W.jpeg?v=1700224480&w=1920&h=1080"
-            />
-          </div>
+          {this.state.articles.map((element) => {
+            return (
+              <div className="col-md-4" key={element.url}>
+                <NewsItem
+                  title={element.title ? element.title.slice(0, 40) : ""}
+                  description={
+                    element.description
+                      ? element.description.slice(0, 88)
+                      : "Nothing to show"
+                  }
+                  newsUrl={element.url}
+                  img={
+                    element.urlToImage
+                      ? element.urlToImage
+                      : "https://www.livelaw.in/h-upload/2023/10/31/501020-tamil-nadu-government-questioning-governors-slow-pace-in-in-assenting-bills-proclaiming-him-as-a-political-rival.jpg"
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     );
