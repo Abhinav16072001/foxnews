@@ -8,16 +8,52 @@ export default class News extends Component {
     this.state = {
       articles: [],
       loading: false,
+      page: 1,
+      totalResults: 0,
     };
   }
 
-  async componentDidMount() {
-    let url =
-      "https://newsapi.org/v2/top-headlines?country=in&apiKey=0529b7bd50dd4e6596cbf39ab52de290";
+  parseArticles = async (page) => {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=0529b7bd50dd4e6596cbf39ab52de290&pageSize=20&page=${page}`;
     let data = await fetch(url);
     let parsedData = await data.json();
-    this.setState({ articles: parsedData.articles });
+    this.setState({
+      articles: parsedData.articles || [],
+      totalResults: parsedData.totalResults || 0,
+    });
+    console.log("Current Page: " + this.state.page);
+  };
+
+  async componentDidMount() {
+    this.parseArticles(this.state.page);
   }
+
+  handlePrevClick = async () => {
+    this.setState(
+      {
+        page: this.state.page - 1,
+      },
+      () => {
+        this.parseArticles(this.state.page);
+      }
+    );
+  };
+  handleNextClick = async () => {
+    const nextPage = this.state.page + 1;
+    if (nextPage > Math.ceil(this.state.totalResults / 20)) {
+      return;
+    } else {
+      this.setState(
+        {
+          page: nextPage,
+        },
+
+        () => {
+          this.parseArticles(this.state.page);
+        }
+      );
+    }
+  };
 
   render() {
     return (
@@ -44,6 +80,24 @@ export default class News extends Component {
               </div>
             );
           })}
+        </div>
+
+        <div className="container d-flex justify-content-between">
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={this.state.page <= 1}
+            onClick={this.handlePrevClick}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={this.handleNextClick}
+          >
+            Next
+          </button>
         </div>
       </div>
     );
