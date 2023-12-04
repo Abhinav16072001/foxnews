@@ -127,8 +127,17 @@ export default class News extends Component {
               Next
             </button>
           </div>
-        ):(
-          <p className="position-absolute top-50 start-50 translate-middle">No articles to display</p>
+        ) : (
+          <div>
+            {
+              // Nested if to check if loading is happening
+              !this.state.loading && (
+                <p className="position-absolute top-50 start-50 translate-middle">
+                  No articles to display
+                </p>
+              )
+            }
+          </div>
         )}
       </div>
     );
