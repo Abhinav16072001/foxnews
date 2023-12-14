@@ -16,8 +16,8 @@ export default class News extends Component {
     category: PropTypes.string,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       articles: [],
@@ -25,6 +25,7 @@ export default class News extends Component {
       page: 1,
       totalResults: 0,
     };
+    document.title = "Fox News | " + this.props.category;
   }
 
   parseArticles = async (page) => {
@@ -80,7 +81,7 @@ export default class News extends Component {
   render() {
     return (
       <div className="container p-0 my-3 text-center">
-        <h2>Fox New - Top Headings</h2>
+        <h2>Fox New - Top Headings | {this.props.category}</h2>
         {this.state.loading && <Spinner />}
         <div className="row">
           {!this.state.loading &&
@@ -100,6 +101,13 @@ export default class News extends Component {
                         ? element.urlToImage
                         : "https://peoplevine.blob.core.windows.net/media/72/e86f3854-ebcf-4025-ae66-220b51f77ec2/image_not_available.png"
                     }
+                    author={
+                      element.author
+                    }
+                    date = {
+                      element.publishedAt
+                    }
+                    source={element.source.name}
                   />
                 </div>
               );
