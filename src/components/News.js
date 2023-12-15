@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   static defaultProps = {
@@ -77,43 +78,62 @@ export default class News extends Component {
       );
     }
   };
+  fetchMoreData = async () => {
+    this.setState({
+      page: this.state.page + 1,
+    });
+  
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=0529b7bd50dd4e6596cbf39ab52de290&pageSize=${this.props.pageSize}&page=${this.state.page}`;
+    let response = await fetch(url);
+    let parsedData = await response.json();
+  
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+    });
+
+  };
 
   render() {
     return (
       <div className="container p-0 my-3 text-center">
         <h2>Fox New - Top Headings | {this.props.category}</h2>
-        {this.state.loading && <Spinner />}
-        <div className="row">
-          {!this.state.loading &&
-            this.state.articles.map((element) => {
-              return (
-                <div className="col-md-4" key={element.url}>
-                  <NewsItem
-                    title={element.title ? element.title.slice(0, 40) : ""}
-                    description={
-                      element.description
-                        ? element.description.slice(0, 80)
-                        : "Nothing to show"
-                    }
-                    newsUrl={element.url}
-                    img={
-                      element.urlToImage
-                        ? element.urlToImage
-                        : "https://peoplevine.blob.core.windows.net/media/72/e86f3854-ebcf-4025-ae66-220b51f77ec2/image_not_available.png"
-                    }
-                    author={
-                      element.author
-                    }
-                    date = {
-                      element.publishedAt
-                    }
-                    source={element.source.name}
-                  />
-                </div>
-              );
-            })}
-        </div>
-        {this.state.articles.length >= 1 ? (
+        {/* {this.state.loading && <Spinner />} */}
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length <= this.state.totalResults}
+          loader={<Spinner/>}
+        >
+          <div className="container">
+          <div className="row">
+            {!this.state.loading &&
+              this.state.articles.map((element, index) => {
+                return (
+                  <div className="col-md-4" key={`${element.url}-${index}`}>
+                    <NewsItem
+                      title={element.title ? element.title.slice(0, 40) : ""}
+                      description={
+                        element.description
+                          ? element.description.slice(0, 80)
+                          : "Nothing to show"
+                      }
+                      newsUrl={element.url}
+                      img={
+                        element.urlToImage
+                          ? element.urlToImage
+                          : "https://peoplevine.blob.core.windows.net/media/72/e86f3854-ebcf-4025-ae66-220b51f77ec2/image_not_available.png"
+                      }
+                      author={element.author}
+                      date={element.publishedAt}
+                      source={element.source.name}
+                    />
+                  </div>
+                );
+              })}
+          </div>
+          </div>
+        </InfiniteScroll>
+        {/* {this.state.articles.length >= 1 ? (
           <div className="container d-flex justify-content-between">
             <button
               type="button"
@@ -146,7 +166,7 @@ export default class News extends Component {
               )
             }
           </div>
-        )}
+        )} */}
       </div>
     );
   }
