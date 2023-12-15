@@ -30,12 +30,17 @@ export default class News extends Component {
   }
 
   parseArticles = async (page) => {
+    this.props.setProgess(10);
     this.setState({
       loading: true,
     });
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=0529b7bd50dd4e6596cbf39ab52de290&pageSize=${this.props.pageSize}&page=${page}`;
     let data = await fetch(url);
+    this.props.setProgess(50);
+
     let parsedData = await data.json();
+    this.props.setProgess(70);
+
     // let parsedData = {
     //   articles: [],
     //   totalResults: 0,
@@ -45,6 +50,7 @@ export default class News extends Component {
       totalResults: parsedData.totalResults || 0,
       loading: false,
     });
+    this.props.setProgess(100);
     console.log("Current Page: " + this.state.page);
   };
 
@@ -82,15 +88,14 @@ export default class News extends Component {
     this.setState({
       page: this.state.page + 1,
     });
-  
+
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=0529b7bd50dd4e6596cbf39ab52de290&pageSize=${this.props.pageSize}&page=${this.state.page}`;
     let response = await fetch(url);
     let parsedData = await response.json();
-  
+
     this.setState({
       articles: this.state.articles.concat(parsedData.articles),
     });
-
   };
 
   render() {
@@ -102,35 +107,35 @@ export default class News extends Component {
           dataLength={this.state.articles.length}
           next={this.fetchMoreData}
           hasMore={this.state.articles.length <= this.state.totalResults}
-          loader={<Spinner/>}
+          loader={<Spinner />}
         >
           <div className="container">
-          <div className="row">
-            {!this.state.loading &&
-              this.state.articles.map((element, index) => {
-                return (
-                  <div className="col-md-4" key={`${element.url}-${index}`}>
-                    <NewsItem
-                      title={element.title ? element.title.slice(0, 40) : ""}
-                      description={
-                        element.description
-                          ? element.description.slice(0, 80)
-                          : "Nothing to show"
-                      }
-                      newsUrl={element.url}
-                      img={
-                        element.urlToImage
-                          ? element.urlToImage
-                          : "https://peoplevine.blob.core.windows.net/media/72/e86f3854-ebcf-4025-ae66-220b51f77ec2/image_not_available.png"
-                      }
-                      author={element.author}
-                      date={element.publishedAt}
-                      source={element.source.name}
-                    />
-                  </div>
-                );
-              })}
-          </div>
+            <div className="row">
+              {!this.state.loading &&
+                this.state.articles.map((element, index) => {
+                  return (
+                    <div className="col-md-4" key={`${element.url}-${index}`}>
+                      <NewsItem
+                        title={element.title ? element.title.slice(0, 40) : ""}
+                        description={
+                          element.description
+                            ? element.description.slice(0, 80)
+                            : "Nothing to show"
+                        }
+                        newsUrl={element.url}
+                        img={
+                          element.urlToImage
+                            ? element.urlToImage
+                            : "https://peoplevine.blob.core.windows.net/media/72/e86f3854-ebcf-4025-ae66-220b51f77ec2/image_not_available.png"
+                        }
+                        author={element.author}
+                        date={element.publishedAt}
+                        source={element.source.name}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </InfiniteScroll>
         {/* {this.state.articles.length >= 1 ? (
