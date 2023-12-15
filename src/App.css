@@ -36,3 +36,53 @@
     transform: rotate(360deg);
   }
 }
+
+.newItem {
+  width: 18rem;
+  margin: 20px;
+  display: inline-block;
+}
+
+.newItem .card {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.newItem .card-img-top {
+  width: 100%;
+  height: 12rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.newItem .card-body {
+  padding: 1rem;
+}
+
+.newItem .card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.newItem .card-text {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+  height: 4rem;
+}
+
+.newItem .btn-primary {
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.newItem .link {
+  color: gray;
+  text-decoration: none;
+}
+
+.category{
+  width: 10rem;
+}
