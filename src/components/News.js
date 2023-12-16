@@ -14,7 +14,6 @@ const News = (props) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  document.title = "Fox News | " + capitalizeFirstLetter(props.category);
 
   const parseArticles = async (page) => {
     props.setProgess(10);
@@ -39,6 +38,7 @@ const News = (props) => {
   };
 
   useEffect(() => {
+    document.title = "Fox News | " + capitalizeFirstLetter(props.category);
     parseArticles(page);
     // eslint-disable-next-line
   }, []);
@@ -54,8 +54,8 @@ const News = (props) => {
   };
 
   return (
-    <div className="container p-0 my-3 text-center">
-      <h2>Fox New - Top Headings | {capitalizeFirstLetter(props.category)}</h2>
+    <div className="container p-0 my-5 text-center">
+      <h2 className="my-5 p-3">Fox New - Top Headings | {capitalizeFirstLetter(props.category)}</h2>
       {/* {loading && <Spinner />} */}
       <InfiniteScroll
         dataLength={articles.length}
