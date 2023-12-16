@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import News from "./components/News";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoadingBar from "react-top-loading-bar";
+import AboutUs from "./components/AboutUs";
 
 export default class App extends Component {
   apiKey = process.env.REACT_APP_NEWS_API_KEY;
@@ -86,7 +87,7 @@ export default class App extends Component {
               />
             }
           />
-          <Route exact path="/about" element={<h1>None</h1>} />
+          <Route exact path="/about" element={<AboutUs />} />
         </Routes>
       </BrowserRouter>
     );
